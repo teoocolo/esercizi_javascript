@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Iscrizione</title>
+
+    <style>
+        table,
+        td,
+        th {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="form">
+        <table>
+            <tr>
+                <td>ID Studente</td>
+                <td><input type="number" id="codice" required placeholder="ID Studente"></td>
+            </tr>
+            <tr>
+                <td>Ore di Frequenza</td>
+                <td><input type="number" id="ore" required min="1" max="1000" placeholder="Ore"></td>
+            </tr>
+            <tr>
+                <td><button type="button" id="aggiungi" onclick="aggiungiIscrizione()">Aggiungi Iscrizione</button></td>
+                <td><button type="button" id="mostra" onclick="mostraIscrizioni()">Mostra Iscrizioni</button></td>
+            </tr>
+        </table>
+    </form>
+
+    <div id="tabella"></div>
+    <div id="superiori"></div>
+    <div id="tabellaSup"></div>
+    <script>
+        let clienti = []
+        let c = 0
+        let superiori = []
+
+
+        tabella = "<table><tr><th>ID Studente</th><th>Ore di Frequenza</th><th>Costo Totale</th></tr>"
+
+        function aggiungiIscrizione() {
+            codice = document.getElementById("codice").value
+            ore = document.getElementById("ore").value
+            if (validaForm()) {
+                function calcolaCosto(ore) {
+                    let costo = 15
+                    if (ore >= 1 && ore <= 10) {
+                        costo = costo * ore
+                    } else if (ore >= 11 && ore <= 20) {
+                        percentuale = costo * 0.05
+                        costo = (costo * ore) - percentuale
+                    } else if (ore > 20) {
+                        percentuale = costo * 0.1
+                        costo = (costo * ore) - percentuale
+                    }
+                    return costo
+                }
+
+                importo = calcolaCosto(ore)
+
+                clienti.push({ codice: codice, ore: ore, importo: importo })
+
+                document.getElementById("form").reset()
+                c += 1
+                if (importo > 200) {
+                    superiori.push({ codice: codice, importo: importo })
+                }
+            }
+        }
+        function mostraIscrizioni() {
+            if (validaStampa(c)) {
+                for (cliente of clienti) {
+                    tabella += `<tr><td>${cliente.codice}</td><td>${cliente.ore}</td><td>${cliente.importo}€</td></tr>`
+                }
+                tabella += "</table>"
+                document.getElementById("tabella").innerHTML = tabella
+                document.getElementById("aggiungi").disabled = true
+                document.getElementById("mostra").disabled = true
+                if (superiori.length > 0) {
+                    stampa = "<table><tr><th>ID Studente</th><th>Costo Totale</th></tr>"
+                    document.getElementById("superiori").innerText = "Iscrizioni superiori a 200€: "
+                    for (superiore of superiori) {
+                        document.getElementById("superiori").value = superiore.importo
+                        stampa += `<tr><td>Id: ${superiore.codice}</td><td>${superiore.importo}€</td></tr>`
+                    }
+                    stampa += "</table>"
+                    document.getElementById("tabellaSup").innerHTML = stampa
+
+                }
+            }
+
+        }
+
+
+        function validaForm() {
+            if (codice != "" && ore != "") {
+                return true
+            } else {
+                alert("Valori inseriti non validi")
+                return false
+            }
+        }
+
+        function validaStampa(c) {
+            if (c > 0) {
+                return true
+            } else {
+                alert("Non hai inserito nessuna iscrizione")
+            }
+        }
+    </script>
+</body>
+
+</html>
