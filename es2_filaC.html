@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function calcola_budget(budgetIniziale, ...importi) {
+            let totale = budgetIniziale;
+            for (let i = 0; i < importi.length; i++) {
+                totale -= importi[i];
+            }
+            return totale;
+        }
+
+        // Esempio di utilizzo
+        let budget = 500;
+
+        // Prima chiamata
+        budget = calcola_budget(budget, 50, 30, 20);
+        console.log("Vengono sottratte le spese di: 50, 30, 20")
+        console.log("Budget rimanente:", budget); 
+
+        // Seconda chiamata
+        budget = calcola_budget(budget, 100, 50);
+        console.log("Budget rimanente:", budget);
+
+        // Terza chiamata
+        budget = calcola_budget(budget, 70, 30);
+        console.log("Budget rimanente:", budget); 
+
+    </script>
+</body>
+
+</html>

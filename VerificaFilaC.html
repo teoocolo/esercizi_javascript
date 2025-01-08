@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biblioteca</title>
+
+    <style>
+      table,
+      th,
+      tr,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 3px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form id="form">
+      <table id="risultati">
+        <tr>
+          <td>ID UTENTE</td>
+          <td>
+            <input
+              type="number"
+              id="codice"
+              name="codice"
+              placeholder="Codice Cliente"
+              required
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>TITOLO LIBRO</td>
+          <td>
+            <input
+              type="text"
+              id="titolo"
+              name="titolo"
+              placeholder="Titolo del Libro"
+              required
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>GIORNI PRENOTAZIONE</td>
+          <td>
+            <input
+              type="number"
+              id="giorni"
+              name="giorni"
+              placeholder="Giorni di Prenotazione"
+              required
+            />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button type="button" id="calcola" onclick="AddBooking()">
+              Calcola Importo
+            </button>
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+      let clienti = [];
+
+      function AddBooking() {
+        let codiceUtente = document.getElementById("codice").value;
+        let titoloLibro = document.getElementById("titolo").value;
+        let giorniPrenotazione = document.getElementById("giorni").value;
+
+        if (validaForm(codiceUtente, titoloLibro, giorniPrenotazione)) {
+          clienti.push({ codiceUtente, titoloLibro, giorniPrenotazione });
+
+          renderTable();
+
+          updateSummary(codiceUtente);
+        }
+      }
+
+      function renderTable() {
+        let tabella =
+          "<table><tr><th>Codice Utente</th><th>Titolo Libro</th><th>Giorni Prenotazione</th></tr>";
+
+        for (let cliente of clienti) {
+          tabella += `<tr><td>${cliente.codiceUtente}</td><td>${cliente.titoloLibro}</td><td>${cliente.giorniPrenotazione}</td></tr>`;
+        }
+
+        tabella += "</table>";
+        document.getElementById("output").innerHTML = tabella;
+      }
+
+      function updateSummary(codiceUtente) {
+        let totalePrenotazioni = 0;
+
+        for (let cliente of clienti) {
+          if (cliente.codiceUtente == codiceUtente) {
+            totalePrenotazioni += parseInt(cliente.giorniPrenotazione);
+          }
+        }
+
+        document.getElementById(
+          "output"
+        ).innerHTML += `<p>Totale dei giorni di prenotazione per l'utente ${codiceUtente}: ${totalePrenotazioni}</p>`;
+      }
+
+      function validaForm(codiceUtente, titoloLibro, giorniPrenotazione) {
+        if (
+          isNaN(codiceUtente) ||
+          codiceUtente == "" ||
+          codiceUtente <= 0 ||
+          titoloLibro == "" ||
+          isNaN(giorniPrenotazione) ||
+          giorniPrenotazione == "" ||
+          giorniPrenotazione <= 0
+        ) {
+          alert("Dati inseriti errati o inesistenti");
+          return false;
+        } else {
+          return true;
+        }
+      }
+    </script>
+  </body>
+</html>
